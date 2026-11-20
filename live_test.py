@@ -1,4 +1,3 @@
-import io
 import sys
 
 import requests
@@ -6,24 +5,26 @@ import requests
 BASE_URL = "https://uda-census.fastapicloud.dev/"
 
 
-CSV_TEXT = (
-    "age, workclass, fnlgt, education, education-num, marital-status, "
-    "occupation, relationship, race, sex, capital-gain, capital-loss, "
-    "hours-per-week, native-country, salary\n"
-    "39, State-gov, 77516, Bachelors, 13, Never-married, Adm-clerical, "
-    "Not-in-family, White, Male, 2174, 0, 40, United-States, <=50K\n"
-    "50, Self-emp-not-inc, 83311, Bachelors, 13, Married-civ-spouse, "
-    "Exec-managerial, Husband, White, Male, 0, 0, 13, United-States, >50K\n"
-)
-
-
 def main() -> int:
     url = f"{BASE_URL}/predict"
     try:
         response = requests.post(
             url,
-            files={
-                "file": ("data.csv", io.BytesIO(CSV_TEXT.encode()), "text/csv")
+            json={
+                "csv_data": [
+                    {
+                        "age": 39,
+                        "workclass": "State-gov",
+                        "fnlgt": 77516,
+                        "education": "Bachelors",
+                        "education-num": 13,
+                        "occupation": "Adm-clerical",
+                        "hours-per-week": 40,
+                        "native-country": "United-States",
+                        "race": "white",
+                        "sex": "male",
+                    }
+                ]
             },
             timeout=60,  # free-tier hosts can take a while to wake up
         )
